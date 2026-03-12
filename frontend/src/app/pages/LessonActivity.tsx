@@ -6,7 +6,7 @@ import { motion } from 'motion/react';
 import { AIAssistantModal } from '../components/AIAssistantModal';
 
 export default function LessonActivity() {
-  const { unitId, lessonId } = useParams();
+  const { unitId } = useParams();
   const navigate = useNavigate();
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [compositionText, setCompositionText] = useState("");
@@ -38,7 +38,7 @@ export default function LessonActivity() {
 
   // 查找当前单元和课程
   const unit = units.find(u => u.id === Number(unitId));
-  const lesson = unit?.lessons.find(l => l.id === Number(lessonId));
+  const theme = unit?.themes.find(t => t.id === 2);
 
   const handleTaskSubmit = () => {
     if (isTaskSubmitting || isTaskCompleted) return;
@@ -70,7 +70,7 @@ export default function LessonActivity() {
     }
   };
 
-  if (!unit || !lesson) {
+  if (!unit || !theme) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-50 flex items-center justify-center">
         <div className="text-center">
@@ -103,7 +103,7 @@ export default function LessonActivity() {
           className="flex items-center gap-2 text-indigo-700 hover:text-indigo-900 mb-6 transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
-          返回课时列表
+          返回主题列表
         </button>
 
         <motion.div 
@@ -113,10 +113,10 @@ export default function LessonActivity() {
         >
           <div className="flex items-start justify-between gap-4">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-indigo-900 mb-2">{lesson.title}</h1>
-              <p className="text-indigo-700">{unit.title} · {lesson.description}</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-indigo-900 mb-2">{theme.title}</h1>
+              <p className="text-indigo-700">{unit.title} · {theme.description}</p>
             </div>
-            {lesson.completed && (
+            {theme.completed && (
               <div className="flex items-center gap-2 bg-green-100 text-green-700 px-3 py-1 rounded-full whitespace-nowrap">
                 <CheckCircle className="w-4 h-4" />
                 <span className="text-sm font-medium">已完成</span>
@@ -198,16 +198,6 @@ export default function LessonActivity() {
                   placeholder="记录下你学到的摄影技巧或心得体会..."
                   className="w-full h-32 p-3 bg-transparent resize-none focus:outline-none text-gray-700 text-sm placeholder:text-gray-400 disabled:opacity-50 disabled:bg-gray-50/50"
                 ></textarea>
-                <div className="absolute right-3 bottom-3 flex gap-2">
-                  <button 
-                    onClick={() => setIsAIOpen(true)}
-                    disabled={isTaskCompleted}
-                    className="flex items-center gap-1 px-3 py-1.5 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100 transition-colors text-xs font-medium border border-blue-200 disabled:opacity-50 disabled:hover:bg-blue-50"
-                  >
-                    <Sparkles className="w-3.5 h-3.5" />
-                    AI伴学助手
-                  </button>
-                </div>
               </div>
             </div>
 
@@ -334,16 +324,6 @@ export default function LessonActivity() {
                   placeholder="记录下你学习作文技法的心得体会..."
                   className="w-full h-32 p-3 bg-transparent resize-none focus:outline-none text-gray-700 text-sm placeholder:text-gray-400 disabled:opacity-50 disabled:bg-gray-50/50"
                 ></textarea>
-                <div className="absolute right-3 bottom-3 flex gap-2">
-                  <button 
-                    onClick={() => setIsAIOpen(true)}
-                    disabled={isTaskCompleted}
-                    className="flex items-center gap-1 px-3 py-1.5 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100 transition-colors text-xs font-medium border border-blue-200 disabled:opacity-50 disabled:hover:bg-blue-50"
-                  >
-                    <Sparkles className="w-3.5 h-3.5" />
-                    AI伴学助手
-                  </button>
-                </div>
               </div>
             </div>
 
@@ -430,16 +410,6 @@ export default function LessonActivity() {
                   placeholder="记录下你的筹备计划或分工安排..."
                   className="w-full h-32 p-3 bg-transparent resize-none focus:outline-none text-gray-700 text-sm placeholder:text-gray-400 disabled:opacity-50 disabled:bg-gray-50/50"
                 ></textarea>
-                <div className="absolute right-3 bottom-3 flex gap-2">
-                  <button 
-                    onClick={() => setIsAIOpen(true)}
-                    disabled={isTaskCompleted}
-                    className="flex items-center gap-1 px-3 py-1.5 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100 transition-colors text-xs font-medium border border-blue-200 disabled:opacity-50 disabled:hover:bg-blue-50"
-                  >
-                    <Sparkles className="w-3.5 h-3.5" />
-                    AI伴学助手
-                  </button>
-                </div>
               </div>
             </div>
 
@@ -612,6 +582,14 @@ export default function LessonActivity() {
           </button>
         </motion.div>
       </div>
+
+      {/* Floating AI Button */}
+      <button
+        onClick={() => setIsAIOpen(true)}
+        className="fixed bottom-8 right-8 z-40 flex items-center justify-center w-14 h-14 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 group"
+      >
+        <Sparkles className="w-6 h-6 text-white group-hover:animate-pulse" />
+      </button>
 
       <AIAssistantModal 
         isOpen={isAIOpen}

@@ -1,4 +1,4 @@
-import type { Badge } from "../data/mockData";
+import type { Badge } from "../data/units";
 import { motion } from "motion/react";
 
 interface BadgeDisplayProps {
@@ -31,7 +31,7 @@ export function BadgeDisplay({ badges }: BadgeDisplayProps) {
                   : 'bg-gray-200 opacity-50 grayscale'
                 }
               `}
-              style={badge.earned ? { backgroundColor: badge.color } : {}}
+              style={badge.earned ? {} : {}}
             >
               {badge.icon}
             </div>

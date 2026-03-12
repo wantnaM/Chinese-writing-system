@@ -25,62 +25,14 @@ const cardThemes = [
     shadowColor: "shadow-blue-200/60",
     iconBg: "bg-blue-500",
   },
-  {
-    bg: "from-pink-50 to-pink-100",
-    accent: "bg-pink-500",
-    accentLight: "bg-pink-100",
-    accentBorder: "border-pink-300",
-    progressBg: "bg-pink-400",
-    progressTrack: "bg-pink-100",
-    tagBg: "bg-pink-500/10",
-    tagText: "text-pink-600",
-    decoColor1: "bg-blue-300",
-    decoColor2: "bg-pink-300",
-    decoColor3: "bg-purple-300",
-    headerGradient: "from-pink-400 to-pink-600",
-    shadowColor: "shadow-pink-200/60",
-    iconBg: "bg-pink-500",
-  },
-  {
-    bg: "from-purple-50 to-blue-50",
-    accent: "bg-purple-500",
-    accentLight: "bg-purple-100",
-    accentBorder: "border-purple-300",
-    progressBg: "bg-purple-400",
-    progressTrack: "bg-purple-100",
-    tagBg: "bg-purple-500/10",
-    tagText: "text-purple-600",
-    decoColor1: "bg-pink-300",
-    decoColor2: "bg-blue-300",
-    decoColor3: "bg-purple-300",
-    headerGradient: "from-purple-400 to-blue-500",
-    shadowColor: "shadow-purple-200/60",
-    iconBg: "bg-purple-500",
-  },
-  {
-    bg: "from-blue-50 to-pink-50",
-    accent: "bg-indigo-500",
-    accentLight: "bg-indigo-100",
-    accentBorder: "border-indigo-300",
-    progressBg: "bg-indigo-400",
-    progressTrack: "bg-indigo-100",
-    tagBg: "bg-indigo-500/10",
-    tagText: "text-indigo-600",
-    decoColor1: "bg-pink-300",
-    decoColor2: "bg-indigo-300",
-    decoColor3: "bg-blue-300",
-    headerGradient: "from-indigo-400 to-pink-500",
-    shadowColor: "shadow-indigo-200/60",
-    iconBg: "bg-indigo-500",
-  },
 ];
 
 export function UnitCard({ unit, onClick }: UnitCardProps) {
-  const completedLessons = unit.lessons.filter(lesson => lesson.completed).length;
-  const totalLessons = unit.lessons.length;
-  const progressPercent = (completedLessons / totalLessons) * 100;
-  const isCompleted = unit.completed || completedLessons === totalLessons;
-  const theme = cardThemes[(unit.id - 1) % cardThemes.length];
+  const completedThemes = unit.themes.filter(t => t.completed).length;
+  const totalThemes = unit.themes.length;
+  const progressPercent = (completedThemes / totalThemes) * 100;
+  const isCompleted = unit.completed || completedThemes === totalThemes;
+  const theme = cardThemes[0];
 
   return (
     <div className="relative" onClick={onClick}>
@@ -156,7 +108,7 @@ export function UnitCard({ unit, onClick }: UnitCardProps) {
           {/* Floating icon */}
           <div className="absolute bottom-2 right-4">
             <div className={`w-12 h-12 ${theme.iconBg} rounded-xl shadow-lg flex items-center justify-center transform rotate-6`}>
-              <span className="text-2xl">{unit.id === 1 ? '🌿' : unit.id === 2 ? '💡' : unit.id === 3 ? '📜' : '✨'}</span>
+              <span className="text-2xl">🌿</span>
             </div>
           </div>
         </div>
@@ -173,13 +125,13 @@ export function UnitCard({ unit, onClick }: UnitCardProps) {
           {/* Tags */}
           <div className="flex gap-1.5 mb-4 flex-wrap">
             <span className={`text-xs px-2 py-0.5 rounded-full ${theme.tagBg} ${theme.tagText}`} style={{ fontWeight: 500 }}>
-              {totalLessons} 课时
+              {totalThemes} 个主题
             </span>
             {isCompleted ? (
               <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600" style={{ fontWeight: 500 }}>
                 已完成
               </span>
-            ) : completedLessons > 0 ? (
+            ) : completedThemes > 0 ? (
               <span className="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600" style={{ fontWeight: 500 }}>
                 学习中
               </span>
@@ -213,7 +165,7 @@ export function UnitCard({ unit, onClick }: UnitCardProps) {
             <div className="text-xs text-gray-400" style={{ fontWeight: 500 }}>
               {isCompleted
                 ? "🎉 太棒了！全部完成"
-                : `已完成 ${completedLessons}/${totalLessons} 课时`}
+                : `已完成 ${completedThemes}/${totalThemes} 个主题`}
             </div>
           </div>
         </div>

@@ -3,52 +3,39 @@ import { units } from "../data/units";
 import {
   ArrowLeft,
   CheckCircle,
-  BookText,
   BookOpen,
-  Pen,
   Camera,
-  Sparkles,
-  MessageCircleQuestion,
+  Lightbulb,
+  Lock,
 } from "lucide-react";
 import { motion } from "motion/react";
 
-// 课程类型配置
-const lessonTypeConfig = {
-  reading: {
-    label: "阅读",
+// 主题类型配置
+const themeTypeConfig = {
+  themeReading: {
+    label: "主题阅读",
     icon: BookOpen,
     gradient: "from-blue-500 to-cyan-500",
     bgColor: "bg-blue-100",
     textColor: "text-blue-800",
+    emoji: "📖",
   },
-  appreciation: {
-    label: "欣赏",
-    icon: Sparkles,
-    gradient: "from-purple-500 to-pink-500",
-    bgColor: "bg-purple-100",
-    textColor: "text-purple-800",
-  },
-  activity: {
-    label: "实践",
+  themeActivity: {
+    label: "主题活动",
     icon: Camera,
     gradient: "from-green-500 to-emerald-500",
     bgColor: "bg-green-100",
     textColor: "text-green-800",
+    emoji: "🎯",
   },
-  writing: {
-    label: "写作",
-    icon: Pen,
-    gradient: "from-orange-500 to-red-500",
+  techniqueLearning: {
+    label: "技法学习",
+    icon: Lightbulb,
+    gradient: "from-orange-500 to-amber-500",
     bgColor: "bg-orange-100",
     textColor: "text-orange-800",
+    emoji: "✍️",
   },
-  exchange: {
-    label: "交流",
-    icon: MessageCircleQuestion,
-    gradient: "from-indigo-500 to-violet-500",
-    bgColor: "bg-indigo-100",
-    textColor: "text-indigo-800",
-  }
 };
 
 export default function LessonList() {
@@ -75,10 +62,10 @@ export default function LessonList() {
   }
 
   // 计算完成进度
-  const completedCount = unit.lessons.filter(
-    (l) => l.completed,
+  const completedCount = unit.themes.filter(
+    (t) => t.completed,
   ).length;
-  const progress = (completedCount / unit.lessons.length) * 100;
+  const progress = (completedCount / unit.themes.length) * 100;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50">
@@ -114,10 +101,10 @@ export default function LessonList() {
                 </p>
                 <div className="flex items-center gap-4 text-sm">
                   <span className="text-amber-600">
-                    共 {unit.lessons.length} 课时
+                    共 {unit.themes.length} 个主题
                   </span>
                   <span className="text-green-600 font-medium">
-                    已完成 {completedCount} 课
+                    已完成 {completedCount} 个
                   </span>
                 </div>
                 {/* 进度条 */}
@@ -140,83 +127,125 @@ export default function LessonList() {
           </div>
         </motion.div>
 
-        {/* Lessons Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-          {unit.lessons.map((lesson, index) => {
-            // 提供后备配置，防止类型不匹配时报错
-            const typeConfig = lessonTypeConfig[lesson.type as keyof typeof lessonTypeConfig] || {
+        {/* Themes Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+          {unit.themes.map((theme, index) => {
+            const typeConfig = themeTypeConfig[theme.type] || {
               label: "未知",
               icon: BookOpen,
               gradient: "from-gray-500 to-slate-500",
               bgColor: "bg-gray-100",
               textColor: "text-gray-800",
+              emoji: "📋",
             };
             const TypeIcon = typeConfig.icon;
+            const isPlaceholder = theme.type === 'techniqueLearning';
 
             return (
               <motion.div
-                key={lesson.id}
+                key={theme.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 * index }}
               >
-                <Link
-                  to={`/unit/${unitId}/lesson/${lesson.id}`}
-                  className="group block"
-                >
-                  <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-5 sm:p-6 border-2 border-amber-200 hover:shadow-2xl hover:border-amber-400 hover:scale-[1.02] transition-all duration-300 relative overflow-hidden">
-                    {/* Background Decoration */}
-                    <div
-                      className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${typeConfig.gradient} opacity-10 rounded-bl-full`}
-                    ></div>
+                {isPlaceholder ? (
+                  <div className="group block">
+                    <div className="bg-white/60 backdrop-blur-sm rounded-xl shadow-lg p-5 sm:p-6 border-2 border-dashed border-gray-300 relative overflow-hidden min-h-[200px] flex flex-col">
+                      {/* Background Decoration */}
+                      <div
+                        className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${typeConfig.gradient} opacity-5 rounded-bl-full`}
+                      ></div>
 
-                    {/* Completed Badge */}
-                    {lesson.completed && (
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{
-                          type: "spring",
-                          delay: 0.2 * index,
-                        }}
-                        className="absolute top-3 right-3 bg-green-500 rounded-full p-2 shadow-md"
-                      >
-                        <CheckCircle className="w-5 h-5 text-white" />
-                      </motion.div>
-                    )}
-
-                    <div className="relative z-10">
-                      <div className="flex items-start gap-3 sm:gap-4">
-                        <div
-                          className={`w-12 h-12 bg-gradient-to-br ${typeConfig.gradient} rounded-lg flex items-center justify-center shadow-md flex-shrink-0`}
-                        >
-                          <TypeIcon className="w-6 h-6 text-white" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-lg sm:text-xl font-bold text-amber-900 mb-2 group-hover:text-amber-700 transition-colors">
-                            {lesson.title}
-                          </h3>
+                      <div className="relative z-10 flex-1 flex flex-col">
+                        <div className="flex items-start gap-3 sm:gap-4">
                           <div
-                            className={`inline-block px-3 py-1 ${typeConfig.bgColor} ${typeConfig.textColor} text-xs sm:text-sm rounded-full font-medium`}
+                            className="w-12 h-12 bg-gradient-to-br from-gray-300 to-gray-400 rounded-lg flex items-center justify-center shadow-md flex-shrink-0"
                           >
-                            {typeConfig.label}
+                            <Lock className="w-6 h-6 text-white" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-lg sm:text-xl font-bold text-gray-400 mb-2">
+                              {theme.title}
+                            </h3>
+                            <div
+                              className="inline-block px-3 py-1 bg-gray-100 text-gray-500 text-xs sm:text-sm rounded-full font-medium"
+                            >
+                              {typeConfig.label}
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      <p className="mt-3 text-sm text-gray-600">
-                        {lesson.description}
-                      </p>
+                        <p className="mt-3 text-sm text-gray-400">
+                          {theme.description}
+                        </p>
+
+                        <div className="mt-auto pt-4 text-center">
+                          <span className="text-xs text-gray-400 bg-gray-100 px-3 py-1.5 rounded-full">
+                            敬请期待
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </Link>
+                ) : (
+                  <Link
+                    to={`/unit/${unitId}/theme/${theme.id}`}
+                    className="group block"
+                  >
+                    <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-5 sm:p-6 border-2 border-amber-200 hover:shadow-2xl hover:border-amber-400 hover:scale-[1.02] transition-all duration-300 relative overflow-hidden min-h-[200px] flex flex-col">
+                      {/* Background Decoration */}
+                      <div
+                        className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${typeConfig.gradient} opacity-10 rounded-bl-full`}
+                      ></div>
+
+                      {/* Completed Badge */}
+                      {theme.completed && (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{
+                            type: "spring",
+                            delay: 0.2 * index,
+                          }}
+                          className="absolute top-3 right-3 bg-green-500 rounded-full p-2 shadow-md"
+                        >
+                          <CheckCircle className="w-5 h-5 text-white" />
+                        </motion.div>
+                      )}
+
+                      <div className="relative z-10 flex-1 flex flex-col">
+                        <div className="flex items-start gap-3 sm:gap-4">
+                          <div
+                            className={`w-12 h-12 bg-gradient-to-br ${typeConfig.gradient} rounded-lg flex items-center justify-center shadow-md flex-shrink-0`}
+                          >
+                            <TypeIcon className="w-6 h-6 text-white" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-lg sm:text-xl font-bold text-amber-900 mb-2 group-hover:text-amber-700 transition-colors">
+                              {theme.title}
+                            </h3>
+                            <div
+                              className={`inline-block px-3 py-1 ${typeConfig.bgColor} ${typeConfig.textColor} text-xs sm:text-sm rounded-full font-medium`}
+                            >
+                              {typeConfig.label}
+                            </div>
+                          </div>
+                        </div>
+
+                        <p className="mt-3 text-sm text-gray-600">
+                          {theme.description}
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                )}
               </motion.div>
             );
           })}
         </div>
 
         {/* 提示信息 */}
-        {completedCount < unit.lessons.length && (
+        {completedCount < unit.themes.length && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -224,7 +253,7 @@ export default function LessonList() {
             className="mt-8 text-center text-amber-700 bg-amber-100/50 backdrop-blur-sm rounded-xl p-4 border border-amber-200"
           >
             <p className="text-sm">
-              💡 继续加油！完成所有课程即可获得本单元徽章
+              💡 继续加油！完成所有主题即可获得本单元徽章
             </p>
           </motion.div>
         )}

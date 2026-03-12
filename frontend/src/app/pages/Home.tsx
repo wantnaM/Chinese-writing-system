@@ -59,7 +59,6 @@ export function Home() {
                 <UnitCard
                   unit={unit}
                   onClick={() => {
-                    // 点击跳转到单元详情页面
                     navigate(`/unit/${unit.id}`);
                   }}
                 />
@@ -75,7 +74,7 @@ export function Home() {
           transition={{ delay: 1 }}
           className="mt-12 text-center text-gray-500 text-sm"
         >
-          <p>💡 完成所有单元任务即可获得对应徽章</p>
+          <p>💡 完成所有主题任务即可获得对应徽章</p>
         </motion.div>
       </main>
     </div>
